@@ -1,0 +1,23 @@
+Java script notes:
+java script is used to create interactive websites.it is a case sensitive language.it is mainly used for 
+1.client side validations
+2. dynamic drop down menus
+3.displaying date and time
+4.displaying popup windows and dialogue boxes
+comments:
+single line comments://
+eg://this is a single line comment
+multiline comment(/* */)
+
+
+one can insert script tag in head section or body section of the html program.
+eg:
+<html>
+<head>
+<script type="text/javascript">
+//body of script tag
+</script>
+</head>
+<script type="text/javascript">
+
+
