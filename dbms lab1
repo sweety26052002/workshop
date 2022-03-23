@@ -1,0 +1,654 @@
+SQL> create table employee
+  2  (
+  3  eid integer,
+  4  ename varchar2(20),
+  5  address varchar2(30),
+  6  phno integer
+  7  );
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table employee
+  2  (
+  3  eid integer unique,
+  4  ename varchar2(20),
+  5  address varchar2(30),
+  6  phno integer,
+  7* )
+SQL> /
+)
+*
+ERROR at line 7:
+ORA-00904: : invalid identifier
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table employee
+  2  (
+  3  eid integer unique,
+  4  ename varchar2(20),
+  5  address varchar2(30),
+  6  phno integer
+  7* )
+SQL> /
+create table employee
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table employeee
+  2  (
+  3  eid integer unique,
+  4  ename varchar2(20),
+  5  address varchar2(30),
+  6  phno integer
+  7* )
+SQL> /
+
+Table created.
+
+SQL> create table department
+  2  (
+  3  did integer,
+  4  dname varchar2(20),
+  5  budget integer,
+  6  unique(did));
+
+Table created.
+
+SQL> create table works_in
+  2  (
+  3  eid integer,
+  4  did integer,
+  5  since date,
+  6  foreign key(eid) references employeee(eid),
+  7  foreign key(did) references department(did));
+
+Table created.
+
+SQL> alter table works_in
+  2  add primary key(eid,did);
+
+Table altered.
+
+SQL> desc works_in
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EID                                       NOT NULL NUMBER(38)
+ DID                                       NOT NULL NUMBER(38)
+ SINCE                                              DATE
+
+SQL> desc employeee
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EID                                                NUMBER(38)
+ ENAME                                              VARCHAR2(20)
+ ADDRESS                                            VARCHAR2(30)
+ PHNO                                               NUMBER(38)
+
+SQL> insert into employee values(501,'tae','korea',2013);
+
+1 row created.
+
+SQL> insert into employee values(235,'ravi','nehru street',NULL);
+
+1 row created.
+
+SQL> insert into employee values(843,'suma','gandhi street',NULL);
+
+1 row created.
+
+SQL> select eid,ename from employeee where
+  2  phno IS NULL;
+
+no rows selected
+
+SQL> insert into employeee values(123,'ankitha','ongole',70133);
+
+1 row created.
+
+SQL> select * from employeee
+  2  ;
+
+       EID ENAME                ADDRESS                              PHNO
+---------- -------------------- ------------------------------ ----------
+       123 ankitha              ongole                              70133
+
+SQL> select * from employee
+  2  ;
+
+       EID ENAME                ADDRESS                              PHNO
+---------- -------------------- ------------------------------ ----------
+       501 tae                  korea                                2013
+       235 ravi                 nehru street
+       843 suma                 gandhi street
+
+SQL> 
+SQL>  insert into employee values(123,'ankitha','ongole',70133);
+
+1 row created.
+
+SQL> 
+SQL> 
+
+SQL> select * from employee
+  2  ;
+
+       EID ENAME                ADDRESS                              PHNO
+---------- -------------------- ------------------------------ ----------
+       501 tae                  korea                                2013
+       235 ravi                 nehru street
+       843 suma                 gandhi street
+       123 ankitha              ongole                              70133
+
+SQL> select eid,ename from employee where phno IS NOT NULL;
+
+       EID ENAME
+---------- --------------------
+       501 tae
+       123 ankitha
+
+SQL> update employee
+  2  set phn=44624
+  3  where eid=235;
+set phn=44624
+    *
+ERROR at line 2:
+ORA-00904: "PHN": invalid identifier
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  update employee
+  2  set phno=44624
+  3* where eid=235
+SQL> /
+
+1 row updated.
+
+SQL> select * from employee
+  2  ;
+
+       EID ENAME                ADDRESS                              PHNO
+---------- -------------------- ------------------------------ ----------
+       501 tae                  korea                                2013
+       235 ravi                 nehru street                        44624
+       843 suma                 gandhi street
+       123 ankitha              ongole                              70133
+
+SQL> insert into department values(503,'cse',50000);
+
+1 row created.
+
+SQL> insert into works_in(501,503,'23-MAR-22');
+insert into works_in(501,503,'23-MAR-22')
+                     *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> insert into works_in values(501,503,'23-MAR-22');
+insert into works_in values(501,503,'23-MAR-22')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (CSE205B3.SYS_C006243) violated - parent key
+not found
+
+
+SQL> insert into department values(501,'05b3',5000);
+
+1 row created.
+
+SQL> insert into works_in values(235,501,'24-MAR-22);
+ERROR:
+ORA-01756: quoted string not properly terminated
+
+
+SQL>  insert into works_in values(235,501,'24-MAR-22');
+ insert into works_in values(235,501,'24-MAR-22')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (CSE205B3.SYS_C006243) violated - parent key
+not found
+
+
+SQL> select * from department;
+
+       DID DNAME                    BUDGET
+---------- -------------------- ----------
+       503 cse                       50000
+       501 05b3                       5000
+
+SQL> insert into department values(235,'05b3',4000);
+
+1 row created.
+
+SQL> insert into works_in values(235,501,'24-MAR-22');
+insert into works_in values(235,501,'24-MAR-22')
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (CSE205B3.SYS_C006243) violated - parent key
+not found
+
+
+SQL> select * from employee;
+
+       EID ENAME                ADDRESS                              PHNO
+---------- -------------------- ------------------------------ ----------
+       501 tae                  korea                                2013
+       235 ravi                 nehru street                        44624
+       843 suma                 gandhi street
+       123 ankitha              ongole                              70133
+
+SQL> desc employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EID                                                NUMBER(38)
+ ENAME                                              VARCHAR2(20)
+ ADDRESS                                            VARCHAR2(30)
+ PHNO                                               NUMBER(38)
+
+SQL> alter table employee constraint
+  2  /
+alter table employee constraint
+                     *
+ERROR at line 1:
+ORA-01735: invalid ALTER TABLE option
+
+
+SQL> alter table employee drop unique;
+alter table employee drop unique
+                               *
+ERROR at line 1:
+ORA-00906: missing left parenthesis
+
+
+SQL> alter table employee drop constraint unique;
+alter table employee drop constraint unique
+                                     *
+ERROR at line 1:
+ORA-02250: missing or invalid constraint name
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* alter table employee drop constraint unique(eid)
+SQL> /
+alter table employee drop constraint unique(eid)
+                                     *
+ERROR at line 1:
+ORA-02250: missing or invalid constraint name
+
+
+SQL> alter table employee
+  2  drop column eid;
+
+Table altered.
+
+SQL> alter table employee
+  2  add(eid int primary key);
+alter table employee
+            *
+ERROR at line 1:
+ORA-01758: table must be empty to add mandatory (NOT NULL) column
+
+
+SQL> select concat('aditya','engineering') from dual;
+
+CONCAT('ADITYA','
+-----------------
+adityaengineering
+
+SQL> select 'aditya'||'engg' from dual;
+
+'ADITYA'||
+----------
+adityaengg
+
+SQL> select 'sweety '||'Grace' from dual;
+
+'SWEETY'||'G
+------------
+sweety Grace
+
+SQL> select lpad('aditya',15,'*')as lpad from dual;
+
+LPAD
+---------------
+*********aditya
+
+SQL> select rpad("aditya',15,'*')as rpad from dual;
+ERROR:
+ORA-01740: missing double quote in identifier
+
+
+SQL> select rpad('aditya',15,'*')as rpad from dual;
+
+RPAD
+---------------
+aditya*********
+
+SQL> select ltrim('123123123sweety123','123')from dual;
+
+LTRIM('12
+---------
+sweety123
+
+SQL> select ltrim('123456sweety123','123')from dual;
+
+LTRIM('12345
+------------
+456sweety123
+
+SQL> select upper('aditya')from dual;
+
+UPPER(
+------
+ADITYA
+
+SQL> select lower('aditya')from dual;
+
+LOWER(
+------
+aditya
+
+SQL> select length('aditya')from dual;
+
+LENGTH('ADITYA')
+----------------
+               6
+
+SQL> select substr('abcdef',-3,2)from dual;
+
+SU
+--
+de
+
+SQL> select instr('abab','b')from duial;
+select instr('abab','b')from duial
+                             *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select instr('abab','b')from dual;
+
+INSTR('ABAB','B')
+-----------------
+                2
+
+SQL> select instr('abab','b',3)from dual;
+
+INSTR('ABAB','B',3)
+-------------------
+                  4
+
+SQL> commit
+  2  ;
+
+Commit complete.
+
+SQL> select ASCII('A
+  2  ')from dual;
+
+ASCII('A')
+----------
+        65
+
+SQL> select chr(97)from dual;
+
+C
+-
+a
+
+SQL> select reverse('aditya');
+select reverse('aditya')
+                       *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> select reverse('aditya')from dual;
+
+REVERS
+------
+aytida
+
+SQL> select replace('jack and jill','j','b')from dual;
+
+REPLACE('JACK
+-------------
+back and bill
+
+SQL> select initcap('aditya engineering')from dual;
+
+INITCAP('ADITYAENG
+------------------
+Aditya Engineering
+
+SQL> select reverse(name)from studen;
+select reverse(name)from studen
+               *
+ERROR at line 1:
+ORA-00904: "NAME": invalid identifier
+
+
+SQL> select reverse(sname)from studen;
+
+REVERSE(SNAME)
+--------------------
+eat
+kookgnuj
+
+SQL> select ceil(2.2)from dual;
+
+ CEIL(2.2)
+----------
+         3
+
+SQL> select floor(2.2)from dual;
+
+FLOOR(2.2)
+----------
+         2
+
+SQL> select mod(150,7)from dual;
+
+MOD(150,7)
+----------
+         3
+
+SQL> ;
+  1* select mod(150,7)from dual
+SQL> ;
+  1* select mod(150,7)from dual
+SQL> /
+
+MOD(150,7)
+----------
+         3
+
+SQL> select sign(29)from dual;
+
+  SIGN(29)
+----------
+         1
+
+SQL> select abs(19)from dual;
+
+   ABS(19)
+----------
+        19
+
+SQL> select abs(-17)from dual;
+
+  ABS(-17)
+----------
+        17
+
+SQL> select round(66.666,2)from dual;
+
+ROUND(66.666,2)
+---------------
+          66.67
+
+SQL> select trunc(66.666,2)from dual;
+
+TRUNC(66.666,2)
+---------------
+          66.66
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+STUDEN                         TABLE
+STUDENTS                       TABLE
+SWEETY                         TABLE
+FACULTY                        TABLE
+APARANJI                       TABLE
+STUDENTS2                      TABLE
+STUDENT3                       TABLE
+STUDENT4                       TABLE
+STU4                           TABLE
+STU5                           TABLE
+ENROLLED                       TABLE
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+EMPLOYEE                       TABLE
+EMPLOYEEE                      TABLE
+DEPARTMENT                     TABLE
+WORKS_IN                       TABLE
+
+15 rows selected.
+
+SQL> select * from employee;
+
+ENAME                ADDRESS                              PHNO
+-------------------- ------------------------------ ----------
+tae                  korea                                2013
+ravi                 nehru street                        44624
+suma                 gandhi street
+ankitha              ongole                              70133
+
+SQL> select ename,address from employee where ename='tae';
+
+ENAME                ADDRESS
+-------------------- ------------------------------
+tae                  korea
+
+SQL> select log(2,2)from dual;
+
+  LOG(2,2)
+----------
+         1
+
+SQL> select sqrt(8)from dual;
+
+   SQRT(8)
+----------
+2.82842712
+
+SQL> select exp(2,3)from dual;
+select exp(2,3)from dual
+       *
+ERROR at line 1:
+ORA-00909: invalid number of arguments
+
+
+SQL> select exp(3)from dual;
+
+    EXP(3)
+----------
+20.0855369
+
+SQL> select exp(1)from dual;
+
+    EXP(1)
+----------
+2.71828183
+
+SQL> select sysdate from dual;
+
+SYSDATE
+---------
+23-MAR-22
+
+SQL> select sysdate-1 from dual;
+
+SYSDATE-1
+---------
+22-MAR-22
+
+SQL> select sysdate+1 from dual;
+
+SYSDATE+1
+---------
+24-MAR-22
+
+SQL> select extract(year from sysdate)from dual;
+
+EXTRACT(YEARFROMSYSDATE)
+------------------------
+                    2022
+
+SQL> select extract(day from sysdate)from dual;
+
+EXTRACT(DAYFROMSYSDATE)
+-----------------------
+                     23
+
+SQL> select to_char(sysdate,'yyyy/mm/dd')from dual;
+
+TO_CHAR(SY
+----------
+2022/03/23
+
+SQL> select to_char(sysdate,'HH:MM:SS')from dual;
+
+TO_CHAR(
+--------
+05:03:40
+
+SQL> select add_months(sysdate,2)from dual;
+
+ADD_MONTH
+---------
+23-MAY-22
+
+SQL> select next_day(sysdate,'thursday')from dual;
+
+NEXT_DAY(
+---------
+24-MAR-22
+
+SQL> select next_day('10-dec-2019','thursday')from dual;
+
+NEXT_DAY(
+---------
+12-DEC-19
+
+SQL> select last_day(sysdate)from dual;
+
+LAST_DAY(
+---------
+31-MAR-22
+
+SQL> select months_between(to_date('09-dec-2022','dd-mm-yyyy'),to_date('09-dec-2019','dd-mm-yyyy'))f
+rom dual;
+
+MONTHS_BETWEEN(TO_DATE('09-DEC-2022','DD-MM-YYYY'),TO_DATE('09-DEC-2019','DD-MM-
+--------------------------------------------------------------------------------
+                                                                              36
