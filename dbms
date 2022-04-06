@@ -1,0 +1,644 @@
+SQL*Plus: Release 10.2.0.1.0 - Production on Wed Apr 6 14:39:44 2022
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.1.0 - Production
+With the Partitioning, OLAP and Data Mining options
+
+SQL> create table tb1
+  2  (
+  3  rno integer,
+  4  name varchar2(20),
+  5  marks integer
+  6  );
+
+Table created.
+
+SQL> create table tb2
+  2  (
+  3  rno integer,
+  4  fee integer
+  5  );
+
+Table created.
+
+SQL> insert into tb1 values(501,'abhi',50);
+
+1 row created.
+
+SQL> ininsert into tb1 values(
+SP2-0734: unknown command beginning "ininsert i..." - rest of line ignored.
+SQL> insert into tb1 values(
+  2  502,'ravi',40);
+
+1 row created.
+
+SQL> insert into tb1(503,'suma',30);
+insert into tb1(503,'suma',30)
+                *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> insert into tb1 values(503,'suma',30);
+
+1 row created.
+
+SQL> insert into tb1 values(504,'raju',35);
+
+1 row created.
+
+SQL> insert into tb1 values(505,'ramu',45);
+
+1 row created.
+
+SQL> select * from tb1;
+
+       RNO NAME                      MARKS
+---------- -------------------- ----------
+       501 abhi                         50
+       502 ravi                         40
+       503 suma                         30
+       504 raju                         35
+       505 ramu                         45
+
+SQL> insert into tb2 values(501,2000);
+
+1 row created.
+
+SQL> insert into tb2 values(502,3000);
+
+1 row created.
+
+SQL> insert into tb2 values(503,1500);
+
+1 row created.
+
+SQL> insert into tb2 values(504,4000);
+
+1 row created.
+
+SQL> select * from tb2;
+
+       RNO        FEE
+---------- ----------
+       501       2000
+       502       3000
+       503       1500
+       504       4000
+
+SQL> select * from tb1 inner join on tb1.rno=tb2.rno;
+select * from tb1 inner join on tb1.rno=tb2.rno
+                             *
+ERROR at line 1:
+ORA-00903: invalid table name
+
+
+SQL> select * from tb1 inner join on tb2 on tb1.rno=tb2.rno;
+select * from tb1 inner join on tb2 on tb1.rno=tb2.rno
+                             *
+ERROR at line 1:
+ORA-00903: invalid table name
+
+
+SQL>  select * from tb1 inner join tb2 on tb1.rno=tb2.rno;
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       501 abhi                         50        501       2000
+       502 ravi                         40        502       3000
+       503 suma                         30        503       1500
+       504 raju                         35        504       4000
+
+SQL> select * from tb1 join tb2 on tb1.rno=tb2.rno;
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       501 abhi                         50        501       2000
+       502 ravi                         40        502       3000
+       503 suma                         30        503       1500
+       504 raju                         35        504       4000
+
+SQL>  select * from tb1 left outer join tb2 on tb1.rno=tb2.rno;
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       501 abhi                         50        501       2000
+       502 ravi                         40        502       3000
+       503 suma                         30        503       1500
+       504 raju                         35        504       4000
+       505 ramu                         45
+
+SQL> insert into tb2 values(506,7000);
+
+1 row created.
+
+SQL> select * from tb1
+  2  right outer join tb2 on tb1.rno=tb2.rno;
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       501 abhi                         50        501       2000
+       502 ravi                         40        502       3000
+       503 suma                         30        503       1500
+       504 raju                         35        504       4000
+                                                  506       7000
+
+SQL> commit
+  2  ;
+
+Commit complete.
+
+SQL> select * from tb1 natural join tb2;
+
+       RNO NAME                      MARKS        FEE
+---------- -------------------- ---------- ----------
+       501 abhi                         50       2000
+       502 ravi                         40       3000
+       503 suma                         30       1500
+       504 raju                         35       4000
+
+SQL> select *from tb1 cross join tb2;
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       501 abhi                         50        501       2000
+       501 abhi                         50        502       3000
+       501 abhi                         50        503       1500
+       501 abhi                         50        504       4000
+       501 abhi                         50        506       7000
+       502 ravi                         40        501       2000
+       502 ravi                         40        502       3000
+       502 ravi                         40        503       1500
+       502 ravi                         40        504       4000
+       502 ravi                         40        506       7000
+       503 suma                         30        501       2000
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       503 suma                         30        502       3000
+       503 suma                         30        503       1500
+       503 suma                         30        504       4000
+       503 suma                         30        506       7000
+       504 raju                         35        501       2000
+       504 raju                         35        502       3000
+       504 raju                         35        503       1500
+       504 raju                         35        504       4000
+       504 raju                         35        506       7000
+       505 ramu                         45        501       2000
+       505 ramu                         45        502       3000
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       505 ramu                         45        503       1500
+       505 ramu                         45        504       4000
+       505 ramu                         45        506       7000
+
+25 rows selected.
+
+SQL> select * from tb1,tb2;
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       501 abhi                         50        501       2000
+       501 abhi                         50        502       3000
+       501 abhi                         50        503       1500
+       501 abhi                         50        504       4000
+       501 abhi                         50        506       7000
+       502 ravi                         40        501       2000
+       502 ravi                         40        502       3000
+       502 ravi                         40        503       1500
+       502 ravi                         40        504       4000
+       502 ravi                         40        506       7000
+       503 suma                         30        501       2000
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       503 suma                         30        502       3000
+       503 suma                         30        503       1500
+       503 suma                         30        504       4000
+       503 suma                         30        506       7000
+       504 raju                         35        501       2000
+       504 raju                         35        502       3000
+       504 raju                         35        503       1500
+       504 raju                         35        504       4000
+       504 raju                         35        506       7000
+       505 ramu                         45        501       2000
+       505 ramu                         45        502       3000
+
+       RNO NAME                      MARKS        RNO        FEE
+---------- -------------------- ---------- ---------- ----------
+       505 ramu                         45        503       1500
+       505 ramu                         45        504       4000
+       505 ramu                         45        506       7000
+
+25 rows selected.
+
+SQL> select t1.rno,t2.name from tb1 t1,tb1 t2 where t1.rno=t2.rno;
+
+       RNO NAME
+---------- --------------------
+       501 abhi
+       502 ravi
+       503 suma
+       504 raju
+       505 ramu
+
+SQL> insert into tb1 values(503,'bhanu',14);
+
+1 row created.
+
+SQL> save point a;
+SP2-0116: Illegal SAVE command
+SQL> savepoint a;
+
+Savepoint created.
+
+SQL> insert into tb1 values(533,'pavani',15);
+
+1 row created.
+
+SQL> savepoint b;
+
+Savepoint created.
+
+SQL> select * from tb1 values(549,'harika',15);
+select * from tb1 values(549,'harika',15)
+                  *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select * from tb1;
+
+       RNO NAME                      MARKS
+---------- -------------------- ----------
+       501 abhi                         50
+       502 ravi                         40
+       503 suma                         30
+       504 raju                         35
+       505 ramu                         45
+       503 bhanu                        14
+       533 pavani                       15
+
+7 rows selected.
+
+SQL> rollback to b;
+
+Rollback complete.
+
+SQL> select * from tb1;
+
+       RNO NAME                      MARKS
+---------- -------------------- ----------
+       501 abhi                         50
+       502 ravi                         40
+       503 suma                         30
+       504 raju                         35
+       505 ramu                         45
+       503 bhanu                        14
+       533 pavani                       15
+
+7 rows selected.
+
+SQL> insert into tb1 values(549,'harika',15);
+
+1 row created.
+
+SQL> 
+SQL> select * from tb1;
+
+       RNO NAME                      MARKS
+---------- -------------------- ----------
+       501 abhi                         50
+       502 ravi                         40
+       503 suma                         30
+       504 raju                         35
+       505 ramu                         45
+       503 bhanu                        14
+       533 pavani                       15
+       549 harika                       15
+
+8 rows selected.
+
+SQL> rollback to b;
+
+Rollback complete.
+
+SQL> select * from tb1;
+
+       RNO NAME                      MARKS
+---------- -------------------- ----------
+       501 abhi                         50
+       502 ravi                         40
+       503 suma                         30
+       504 raju                         35
+       505 ramu                         45
+       503 bhanu                        14
+       533 pavani                       15
+
+7 rows selected.
+
+SQL> rollback to a;
+
+Rollback complete.
+
+SQL> select * from tb1;
+
+       RNO NAME                      MARKS
+---------- -------------------- ----------
+       501 abhi                         50
+       502 ravi                         40
+       503 suma                         30
+       504 raju                         35
+       505 ramu                         45
+       503 bhanu                        14
+
+6 rows selected.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> truncate table t1;
+truncate table t1
+               *
+ERROR at line 1:
+ORA-02266: unique/primary keys in table referenced by enabled foreign keys
+
+
+SQL> truncate table tb1;
+
+Table truncated.
+
+SQL> select * from tb1;
+
+no rows selected
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from tb1;
+
+no rows selected
+
+SQL> desc tb1;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ RNO                                                NUMBER(38)
+ NAME                                               VARCHAR2(20)
+ MARKS                                              NUMBER(38)
+
+SQL> insert into tb1 values(501,'abhi',50);
+
+1 row created.
+
+SQL> 
+SQL>  created.
+SP2-0042: unknown command "created." - rest of line ignored.
+SQL> 
+SQL>  created.
+SP2-0042: unknown command "created." - rest of line ignored.
+SQL> insert into tb1 values(503,'suma',30);
+
+1 row created.
+
+SQL> create view sail_view as(select sid from sailors);
+
+View created.
+
+SQL> insert into sail_view values(125,'uday');
+insert into sail_view values(125,'uday')
+            *
+ERROR at line 1:
+ORA-00913: too many values
+
+
+SQL> desc sailors
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SID                                       NOT NULL NUMBER(38)
+ SNAME                                              VARCHAR2(30)
+ AGE                                                NUMBER(3,1)
+ RATING                                             NUMBER(38)
+
+SQL> create view sail_view as(select sid 
+  2  ,sname from sailors);
+create view sail_view as(select sid
+            *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL>  create view sail_view as(select sid,sname from sailors);
+ create view sail_view as(select sid,sname from sailors)
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL> create view sai_view  as(select sid,sname from sailors);
+
+View created.
+
+SQL>  insert into sail_view values(125,'uday');
+ insert into sail_view values(125,'uday')
+             *
+ERROR at line 1:
+ORA-00913: too many values
+
+
+SQL>  insert into sai insert into sai;
+ insert into sai insert into sai
+                 *
+ERROR at line 1:
+ORA-00926: missing VALUES keyword
+
+
+SQL>  insert into sai_view values(125,'uday');
+
+1 row created.
+
+SQL> select * from sai_view;
+
+       SID SNAME
+---------- ------------------------------
+        22 dustin
+        29 brutus
+        31 luber
+        32 andy
+        64 horatio
+        71 zobra
+        74 ravi
+        85 art
+        95 bob
+        58 rusty
+       125 uday
+
+11 rows selected.
+
+SQL>  insert into sai_view values(
+  2  128,'bts');
+
+1 row created.
+
+SQL> delete from sai_view where sid=125;
+
+1 row deleted.
+
+SQL>  select * from sai_view;
+
+       SID SNAME
+---------- ------------------------------
+        22 dustin
+        29 brutus
+        31 luber
+        32 andy
+        64 horatio
+        71 zobra
+        74 ravi
+        85 art
+        95 bob
+        58 rusty
+       128 bts
+
+11 rows selected.
+
+SQL> select * from sailors;
+
+       SID SNAME                                 AGE     RATING
+---------- ------------------------------ ---------- ----------
+        22 dustin                                 45          7
+        29 brutus                                  3          1
+        31 luber                                55.5          8
+        32 andy                                 25.5          8
+        64 horatio                                35          7
+        71 zobra                                  16         10
+        74 ravi                                   35          9
+        85 art                                    25          3
+        95 bob                                    63          3
+        58 rusty                                  35         10
+       128 bts
+
+11 rows selected.
+
+SQL> replace view sai_view as(select sid,rating from sailors);
+SP2-0734: unknown command beginning "replace vi..." - rest of line ignored.
+SQL> creare  view sai_view as(select sid,rating from sailors);
+SP2-0734: unknown command beginning "creare  vi..." - rest of line ignored.
+SQL> create  view sai_view as(select sid,rating from sailors);
+create  view sai_view as(select sid,rating from sailors)
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL> create or replace  view sai_view as(select sid,rating from sailors);
+
+View created.
+
+SQL> select * from sai_view;
+
+       SID     RATING
+---------- ----------
+        22          7
+        29          1
+        31          8
+        32          8
+        64          7
+        71         10
+        74          9
+        85          3
+        95          3
+        58         10
+       128
+
+11 rows selected.
+
+SQL> drop view sai_view;
+
+View dropped.
+
+SQL> desc sai_view;
+ERROR:
+ORA-04043: object sai_view does not exist
+
+
+SQL> select * from sai_view;
+select * from sai_view
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> create view sai_view as(select sid,rating from sailors with read only);
+create view sai_view as(select sid,rating from sailors with read only)
+                                                       *
+ERROR at line 1:
+ORA-00907: missing right parenthesis
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* create view sai_view as(select sid,rating from sailors with readonly)
+SQL> /
+create view sai_view as(select sid,rating from sailors with readonly)
+                                                       *
+ERROR at line 1:
+ORA-00907: missing right parenthesis
+
+
+SQL> create view sai_stu as select rno,rname from tb1 WITH READ ONLY;
+create view sai_stu as select rno,rname from tb1 WITH READ ONLY
+                                  *
+ERROR at line 1:
+ORA-00904: "RNAME": invalid identifier
+
+
+SQL> create view sai_stu as select rno,name from tb1 WITH READ ONLY;
+
+View created.
+
+SQL> insert sai_view values(45,'ooha');
+insert sai_view values(45,'ooha')
+       *
+ERROR at line 1:
+ORA-00925: missing INTO keyword
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into sai_stu values(45,'ooha')
+SQL> /
+insert into sai_stu values(45,'ooha')
+*
+ERROR at line 1:
+ORA-01733: virtual column not allowed here
+
+
+SQL> create view sai_view as select * from tb1 where marks<=100 WITH CHECK OPTION;
+
+View created.
+
+SQL> insert into sai_view values(12,'padma',101);
+insert into sai_view values(12,'padma',101)
+            *
+ERROR at line 1:
+ORA-01402: view WITH CHECK OPTION where-clause violation
+
+
+SQL> create force view as select * from dummy;
+create force view as select * from dummy
+                  *
+ERROR at line 1:
+ORA-00999: invalid view name
+
+
+SQL> create force view view_st as select * from dummy;
+
+Warning: View created with compilation errors.
