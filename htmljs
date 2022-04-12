@@ -1,0 +1,32 @@
+<html>
+<body>
+<h1>javaScript strings</h1>
+<p id="demo"</p>
+<p id="demo1"</p>
+<p id="demo2"</p>
+<p id="demo3"</p>
+<p id="demo4"</p>
+<p id="demo5"</p>
+<p id="demo6"</p>
+<script>
+let text="HELLO WORLD";
+let text1=" HELLO WORLD! ";
+let str1="sea";
+let str2="food";
+let result0=text1.trim();
+let letter=text.charAt(0);
+let result=text.indexOf("WORLD");
+let result1=text.lastIndexOf("WORLD");
+let result2=text.slice(0,5);
+const myArray=text.split(" ");
+let result3=str1.concat(str2);
+document.getElementById("demo").innerHTML =letter;
+document.getElementById("demo1").innerHTML =result;
+document.getElementById("demo2").innerHTML =result1;
+document.getElementById("demo3").innerHTML =result2;
+document.getElementById("demo4").innerHTML =myArray;
+document.getElementById("demo5").innerHTML =result();
+document.getElementById("demo6").innerHTML =result3;
+</script>
+</body>
+</html>
