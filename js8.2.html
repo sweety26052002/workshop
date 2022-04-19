@@ -1,0 +1,33 @@
+<html>
+<body>
+<script>
+var a=window.prompt("a=");
+var b=window.prompt("b=");
+var c=window.prompt("c=");
+var r1,r2,k;
+var d=b*b-4*a*c;
+if(d<0)
+{
+k=-d
+r1=(Math.sqrt(-d))/(2*a);
+r1=(Math.sqrt(-d))/(2*a);
+document.write("imaginary"+"\n")
+document.write("r1="+k+"+"+r1+"i"+"\n");
+document.write("r2="+k+"-"+r1+"i");
+}
+else if(d==0)
+{
+r1=(-b)/(2*a);
+document.write("real and equal"+"\n");
+document.write("r1="+r1+" "+"r2="+r1);
+}
+else
+{
+r1=(-b+Math.sqrt(d))/(2*a);
+r2=(-b-Math.sqrt(d))/(2*a);
+document.write("r1="+r1+" "+"r2="+r2+"\n");
+document.write("real and distinct");
+}
+</script>
+</body>
+</html>
