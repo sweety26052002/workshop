@@ -1,0 +1,48 @@
+<html>
+<body>
+<script>
+var a=window.prompt("a=");
+var b=window.prompt("b=");
+var c=window.prompt("c=");
+if(a==b)
+{
+if(c>b)
+document.write("LARGER NUMBER:"+" "+"c="+c);
+else
+document.write("EQUAL NUMBERS are a and b:"+" "+b);
+}
+else if(a==c)
+{
+if(c<b)
+document.write("LARGER NUMBER:"+" "+"b="+c);
+else
+document.write("EQUAL NUMBERS are a and c:"+" "+a);
+}
+else if(b==c)
+{
+if(c<a)
+document.write("LARGER NUMBER:"+" "+"a="+a);
+else
+document.write("EQUAL NUMBERS are b and c:"+" "+b);
+}
+else if(a>b)
+{
+if(a>c)
+document.write("LARGER NUMBER:"+" "+"a="+a);
+else
+document.write("LARGGER NUMBER:"+" "+"c="+c);
+}
+else if(b>a)
+{
+if(b>c)
+document.write("LARGER NUMBER:"+" "+"b="+b);
+else
+document.write("LARGER NUMBER:"+" "+"c="+c);
+}
+else
+{
+document.write("EQUAL NUMBERS");
+}
+</script>
+</body>
+</html>
